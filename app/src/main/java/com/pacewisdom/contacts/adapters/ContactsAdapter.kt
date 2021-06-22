@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pacewisdom.contacts.data.models.Contact
 import com.pacewisdom.contacts.databinding.RowContactBinding
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 class ContactsAdapter : ListAdapter<Contact, ContactsAdapter.ViewHolder>(ContactsDiffCallback()) {
 

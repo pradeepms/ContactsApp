@@ -15,11 +15,13 @@ import com.pacewisdom.contacts.databinding.FragmentListContactsBinding
 import com.pacewisdom.contacts.utils.EventObserver
 import com.pacewisdom.contacts.viewmodels.ContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
     private val viewModel: ContactsViewModel by activityViewModels()
-    private lateinit var adapter: ContactsAdapter
+    @Inject
+    lateinit var adapter: ContactsAdapter
 
     companion object {
         private const val TAG = "ListContactsFragment"
@@ -32,7 +34,6 @@ class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ContactsAdapter()
         binding.rvContacts.adapter = adapter
         binding.rvContacts.addItemDecoration(
             DividerItemDecoration(
