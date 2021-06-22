@@ -10,7 +10,7 @@ This sample follows MVVM Single-Activity architecture using Android Jetpack comp
 2. **di**: Dependency providing classes using Hilt.
 3. **viewmodels**: Contains android ViewModels. They provide data to Views by interacting with repositories.
 4. **utils**: Utility classes.
-to5. **data**: contains *repositories* - To interact with the phone book and *models* - Kotlin data classes to hold data.
+5. **data**: contains *repositories* - To interact with the phone book and *models* - Kotlin data classes to hold data.
 
 **ContactsActivity** hosts two fragments, *ListContactsFragment* and *AddContactFragment* to display and to create contacts respectively.
 
