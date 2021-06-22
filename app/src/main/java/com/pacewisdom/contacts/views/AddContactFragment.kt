@@ -30,28 +30,9 @@ class AddContactFragment : BaseFragment<FragmentAddContactBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnSaveContact.setOnClickListener {
             viewModel.addContact(
-                binding.tilName.editText?.text.toString(),
-                binding.tilPhoneNumber.editText?.text.toString()
+                binding.tilName.editText?.text.toString().trim(),
+                binding.tilPhoneNumber.editText?.text.toString().trim()
             )
         }
-        viewModel.isContactAdded.observe(viewLifecycleOwner, EventObserver {
-            when (it) {
-                "Failed" -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Failed!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                "Success" -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Contact added successfully!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    findNavController().navigateUp()
-                }
-            }
-        })
     }
 }

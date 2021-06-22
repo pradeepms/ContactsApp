@@ -58,7 +58,7 @@ class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
                 }
             }
         })
-        viewModel.listContacts()
+
         binding.fabAddContact.setOnClickListener {
             findNavController().navigate(R.id.addContactFragment)
         }
