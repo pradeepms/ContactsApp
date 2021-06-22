@@ -4,10 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pacewisdom.contacts.data.models.Contact
-import com.pacewisdom.contacts.data.repositories.ContactsRepository
+import com.pacewisdom.contacts.data.repositories.ContactsRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import com.pacewisdom.contacts.data.models.Result
+import com.pacewisdom.contacts.data.repositories.ContactsRepository
 import com.pacewisdom.contacts.utils.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
