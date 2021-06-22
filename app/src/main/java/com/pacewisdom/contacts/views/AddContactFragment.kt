@@ -1,16 +1,18 @@
 package com.pacewisdom.contacts.views
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.pacewisdom.contacts.data.models.Result
+import com.pacewisdom.contacts.R
 import com.pacewisdom.contacts.databinding.FragmentAddContactBinding
+import com.pacewisdom.contacts.utils.Constants.FAILED
+import com.pacewisdom.contacts.utils.Constants.SUCCESS
 import com.pacewisdom.contacts.utils.EventObserver
 import com.pacewisdom.contacts.viewmodels.ContactsViewModel
 
@@ -31,25 +33,32 @@ class AddContactFragment : BaseFragment<FragmentAddContactBinding>() {
         binding.materialToolbar.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        // On click Save button, call viewModel addContact to save contact
         binding.btnSaveContact.setOnClickListener {
-            viewModel.addContact(
-                binding.tilName.editText?.text.toString().trim(),
-                binding.tilPhoneNumber.editText?.text.toString().trim()
-            )
+            val name = binding.tilName.editText?.text.toString().trim()
+            val phoneNumber = binding.tilPhoneNumber.editText?.text.toString().trim()
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(phoneNumber)) {
+                Toast.makeText(requireContext(), R.string.empty_input, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            viewModel.addContact(name, phoneNumber)
         }
+
+        // Observe whether the contact added successfully or not
         viewModel.isContactAdded.observe(viewLifecycleOwner, EventObserver {
             when (it) {
-                "Failed" -> {
+                FAILED -> {
                     Toast.makeText(
                         requireContext(),
-                        "Failed!",
+                        R.string.contact_add_failed,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                "Success" -> {
+                SUCCESS -> {
                     Toast.makeText(
                         requireContext(),
-                        "Contact added successfully!",
+                        R.string.contact_add_success,
                         Toast.LENGTH_SHORT
                     ).show()
                     findNavController().navigateUp()

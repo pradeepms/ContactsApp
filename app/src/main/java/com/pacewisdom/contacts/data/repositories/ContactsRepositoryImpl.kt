@@ -9,6 +9,8 @@ import android.provider.ContactsContract.Data
 import android.util.Log
 import com.pacewisdom.contacts.data.models.Contact
 import com.pacewisdom.contacts.data.models.Result
+import com.pacewisdom.contacts.utils.Constants.FAILED
+import com.pacewisdom.contacts.utils.Constants.SUCCESS
 import com.pacewisdom.contacts.utils.Event
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -92,9 +94,9 @@ class ContactsRepositoryImpl
             try {
                 val results =
                     context.contentResolver.applyBatch(ContactsContract.AUTHORITY, operationList)
-                emit(Event("Success"))
+                emit(Event(SUCCESS))
             } catch (e: Exception) {
-                emit(Event("Failed"))
+                emit(Event(FAILED))
             }
         }
     }

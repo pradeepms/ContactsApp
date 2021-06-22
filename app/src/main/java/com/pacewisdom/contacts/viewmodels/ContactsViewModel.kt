@@ -22,13 +22,19 @@ class ContactsViewModel @Inject constructor(
         private const val TAG = "ContactsViewModel"
     }
 
+    // Holders list of fetched contacts from the phone book
     private val _contacts = MutableLiveData<Result<List<Contact>>>()
     val contacts = _contacts
+
+    // Event listener to handle connect added state
     private val _isContactAdded = MutableLiveData<Event<String>>()
     val isContactAdded = _isContactAdded
+
+    // Flag to handle add contact button enabled state
     private val _hasContactPermission = MutableLiveData<Boolean>()
     val hasContactPermission = _hasContactPermission
 
+    // Fetching contacts list in the background thread
     fun listContacts() {
         viewModelScope.launch(Dispatchers.IO) {
             contactsRepository.fetchContacts().collect {
@@ -37,6 +43,7 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
+    // Adding contact
     fun addContact(name: String, phoneNumber: String) {
         viewModelScope.launch(Dispatchers.IO) {
             contactsRepository.addContact(name, phoneNumber).collect {

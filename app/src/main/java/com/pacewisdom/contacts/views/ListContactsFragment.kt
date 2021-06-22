@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -41,17 +42,21 @@ class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
                 DividerItemDecoration.VERTICAL
             )
         )
+
+        // Observe contact list from the phone book
         viewModel.contacts.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Error -> {
+                    binding.progressBar.visibility = View.GONE
                     if (it.exception is SecurityException) {
-                        Log.i(TAG, "onViewCreated: Need permission")
+                        Toast.makeText(requireContext(), R.string.need_contact_permission, Toast.LENGTH_SHORT).show()
                     } else {
-                        Log.e(TAG, "onViewCreated: Something went wrong")
+                        Toast.makeText(requireContext(), R.string.generic_error, Toast.LENGTH_SHORT).show()
                     }
                 }
-                Result.Loading -> Log.i(TAG, "onViewCreated: ")
+                Result.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Result.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     adapter.submitList(it.data)
                 }
             }
