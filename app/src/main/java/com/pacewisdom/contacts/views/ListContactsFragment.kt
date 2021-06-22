@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pacewisdom.contacts.R
 import com.pacewisdom.contacts.adapters.ContactsAdapter
-import com.pacewisdom.contacts.data.models.Contact
 import com.pacewisdom.contacts.data.models.Result
 import com.pacewisdom.contacts.databinding.FragmentListContactsBinding
+import com.pacewisdom.contacts.utils.EventObserver
 import com.pacewisdom.contacts.viewmodels.ContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
     private val viewModel: ContactsViewModel by activityViewModels()
     private lateinit var adapter: ContactsAdapter
-    private val contacts: MutableList<Contact> = mutableListOf()
 
     companion object {
         private const val TAG = "ListContactsFragment"
@@ -33,7 +32,7 @@ class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ContactsAdapter(contacts)
+        adapter = ContactsAdapter()
         binding.rvContacts.adapter = adapter
         binding.rvContacts.addItemDecoration(
             DividerItemDecoration(
@@ -52,11 +51,13 @@ class ListContactsFragment : BaseFragment<FragmentListContactsBinding>() {
                 }
                 Result.Loading -> Log.i(TAG, "onViewCreated: ")
                 is Result.Success -> {
-                    contacts.clear()
-                    contacts.addAll(it.data)
-                    adapter.notifyDataSetChanged()
+                    adapter.submitList(it.data)
                 }
             }
+        })
+
+        viewModel.hasContactPermission.observe(viewLifecycleOwner, {
+            binding.fabAddContact.isEnabled = it
         })
 
         binding.fabAddContact.setOnClickListener {

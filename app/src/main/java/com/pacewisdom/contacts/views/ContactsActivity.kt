@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.pacewisdom.contacts.R
 import com.pacewisdom.contacts.databinding.ActivityContactsBinding
 import com.pacewisdom.contacts.utils.Constants.REQUEST_CODE_CONTACTS
@@ -21,12 +20,15 @@ import com.vmadalin.easypermissions.dialogs.DEFAULT_SETTINGS_REQ_CODE
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
 
+/* Single screen application, which host 2 fragments (ListContactsFragment & AddContactFragment)
+    with android navigation component*/
 @AndroidEntryPoint
 class ContactsActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     companion object {
         private const val TAG = "ContactsActivity"
     }
 
+    // Shared view model
     private val viewModel: ContactsViewModel by viewModels()
     private lateinit var navController: NavController
 
@@ -38,28 +40,11 @@ class ContactsActivity : AppCompatActivity(), EasyPermissions.PermissionCallback
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         requestContactsPermission()
-        viewModel.isContactAdded.observe(this, EventObserver {
-            when (it) {
-                "Failed" -> {
-                    Toast.makeText(
-                        this,
-                        "Failed!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                "Success" -> {
-                    Toast.makeText(
-                        this,
-                        "Contact added successfully!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    navController.navigateUp()
-                    viewModel.listContacts()
-                }
-            }
-        })
     }
 
+    /*
+        Requesting permission for reading and writing Contacts
+     */
     @AfterPermissionGranted(REQUEST_CODE_CONTACTS)
     private fun requestContactsPermission() {
         if (EasyPermissions.hasPermissions(
@@ -68,8 +53,11 @@ class ContactsActivity : AppCompatActivity(), EasyPermissions.PermissionCallback
                 Manifest.permission.WRITE_CONTACTS
             )
         ) {
+            // Has permission. Read contacts from phone contact
             viewModel.listContacts()
+            viewModel.setContactPermission(true)
         } else {
+            // Else, request permission
             EasyPermissions.requestPermissions(
                 host = this,
                 rationale = getString(R.string.rationale_ask),
@@ -82,6 +70,7 @@ class ContactsActivity : AppCompatActivity(), EasyPermissions.PermissionCallback
         }
     }
 
+    // If permission denied, take the user to app settings to change the permission
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         Log.d(TAG, "onPermissionsDenied: ")
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {

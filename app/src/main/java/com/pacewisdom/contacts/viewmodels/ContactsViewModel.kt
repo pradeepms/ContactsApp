@@ -25,6 +25,8 @@ class ContactsViewModel @Inject constructor(
     val contacts = _contacts
     private val _isContactAdded = MutableLiveData<Event<String>>()
     val isContactAdded = _isContactAdded
+    private val _hasContactPermission = MutableLiveData<Boolean>()
+    val hasContactPermission = _hasContactPermission
 
     fun listContacts() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,5 +42,9 @@ class ContactsViewModel @Inject constructor(
                 _isContactAdded.postValue(it)
             }
         }
+    }
+
+    fun setContactPermission(hasPermission: Boolean) {
+        _hasContactPermission.value = hasPermission
     }
 }
